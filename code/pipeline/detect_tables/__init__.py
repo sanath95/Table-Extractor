@@ -1,0 +1,1 @@
+from pipeline.detect_tables.table_detection import TableDetection

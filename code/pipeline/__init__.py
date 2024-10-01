@@ -1,0 +1,1 @@
+from pipeline.table_extractor_pipeline import TableExtractorPipeline

@@ -1,0 +1,11 @@
+{
+    "input_path": "./test_data/hondaactivaconsumerbehaviour-200612061532-images-7.jpg",
+    "output_path": "./outputs/",
+    "table_detection_threshold": 0.9,
+    "padding": 10,
+    "max_new_tokens": 1024,
+    "load_in_8bit": false,
+    "use_pipeline_a": false,
+    "save_temp_files": false,
+    "cache": "./.cache"
+}

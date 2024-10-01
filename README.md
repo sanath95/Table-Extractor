@@ -7,7 +7,7 @@
 4. [Configuration Parameters](#configuration-parameters)
 5. [Execution](#execution)
 6. [Results](#results)
-7. [Observations](#observations)
+7. [Conclusions](#Conclusions)
 8. [References](#references)
 
 ---
@@ -117,12 +117,94 @@ python ./code/main.py
 
 ## Results
 
-- Average time taken Pipeline A - 
-- Average time taken Pipeline B - 
+### Example 1
+
+![table without border](./test_data/Technical%20manual_PAVEMENT%20MAINTENANCE%20MANAGEMENT-images-57.jpg)
+
+| Branch Name | Dickman Street |
+| --- | --- |
+| Branch Number | IDICK |
+| Section Number | 01 |
+| Section Length | 414 LF |
+| Section Width | 21 LF |
+| Section Area | 966 SY |
+
+| Inspection Date | 12/03/79 |
+| --- | --- |
+| PCI | 53 |
+| Rating | Fair |
+| Condition | Riding-C1 Safety-C1 Drainage-C1 Shoulders-C1 Overall-C1 |
+
+| Total Number of Samples in Section | 4 |
+| --- | --- |
+| Number of Samples Surveyed | 4 |
+| Recommend All Sample Units to be Surveyed |  |
+
+| Distress Type | Severity | Quantity | Density-PCT | Deduct-Value |
+| --- | --- | --- | --- | --- |
+| Alligator CR | High | 15 SF | 0.17 | 14.2 |
+| Alligator CR | Low | 680 SF | 7.82 | 29.5 |
+| Alligator CR | Medium | 60 SF | 0.69 | 17.7 |
+| Bleeding | Low | 8 LF | 0.09 | 0.0 |
+| Depression | Low | 18 SF | 0.20 | 4.0 |
+| Edge CR | High | 4 LF | 0.04 | 7.4 |
+| Long/Trans CR | Low | 287 LF | 3.30 | 7.6 |
+| Patch/Util Cut | Low | 100 SF | 1.15 | 2.4 |
+| Patch/Util Cut | Medium | 50 SF | 0.57 | 7.0 |
+| Pothole | High | 4 NMBR | 0.04 | 40.2 |
+| Rutting | Low | 10 SF | 0.11 | 1.0 |
 
 ---
 
-## Observations
+### Example 2
+
+![hand written german 1](./test_data/Adobe%20Scan%2002-Oct-2024_page-0001.jpg)
+
+| Land         | Sprache   | Land         | Sprache   |
+| ------------- | --------- | ------------- | --------- |
+| Deutschland  | Deutsch   | Polen        | Polnisch  |
+| Österreich    | Deutsch   | die Türkei   | Türkisch  |
+| die Schweiz   | Französisch, Italienisch, Römanisch | Russland   | Russisch  |
+| Frankreich   | Französisch | Ägypten     | Arabisch  |
+| Großbritannien | Englisch  | Japan        | Japanisch |
+| Italien      | Italienisch | die USA     | Englisch  |
+| Spanien      | Spanisch   | China        | Chinesisch |
+
+---
+
+### Example 3
+
+![hand written german 2](./test_data/IMG-20241001-WA0001.jpg)
+
+| **Person**   | **Was kann man damit machen?** | **Warum ist das den Personen wichtig?** |
+|--------------|------------------------------|----------------------------------------|
+| **Walkman**  | Musik hören, woo man war | Macht die Musik leiser |
+| **Hawk-Eye** | Feststell, Ball im Ausstieg | Es ist fair |
+
+---
+
+### Example 4
+
+![compound heading](./test_data/hondaactivaconsumerbehaviour-200612061532-images-7.jpg)
+
+```
+> compound_heading = True
+```
+
+| Manufacturers                | 2016-17 Domesic Sales (In Numbers) | 2017-18 Domesic Sales (In Numbers) | Difference (In Numbers) | 2016-17 Market Share (In Percentage) | 2017-18 Market Share (In Percentage) |
+|------------------------------|----------------------------------|----------------------------------|-----------------------|-------------------------------------|-------------------------------------|
+| Hero MotoCorp                 | 789,974                          | 883,667                          | 93,693                | 14.09%                             | 13.15%                             |
+| Honda Motorcycle & Scooter   | 3,189,012                        | 3,821,542                        | 632,530               | 56.90%                            | 56.87%                            |
+| India Yamaha Motor           | 440,423                          | 415,321                          | -25,102               | 7.86%                             | 6.18%                             |
+| Mahindra Two Wheelers        | 34,308                           | 10,538                           | -23,770               | 61.00%                            | 0.16%                             |
+| Piaggio Vehicles              | 43,810                           | 68,169                           | 24,359                | 0.78%                             | 1.01%                             |
+| Suzuki Motorcycle India      | 280,783                          | 42,1539                          | 140,756               | 5.01%                             | 6.27%                             |
+| TVS Motor Co                 | 826,363                          | 1,099,135                        | 272,772               | 14.74%                            | 16.36%                            |
+| **Total**                    | 5,604,673                        | 6,719,911                        | 1,115,238             | 100.00%                           | 100.00%                           |
+
+---
+
+## Conclusions
 
 - The [**OpenGVLab/InternVL2-8B**](https://huggingface.co/OpenGVLab/InternVL2-8B) is able to efficiently extract textual data from tables while preserving the relationships between the table's cells.
 - It can extract German and English languages without user input.

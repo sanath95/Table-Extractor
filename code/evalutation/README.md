@@ -1,1 +1,0 @@
-Evaluation for [pipeline 4](../README.md)

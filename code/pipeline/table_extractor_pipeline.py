@@ -42,7 +42,7 @@ class TableExtractorPipeline:
             return []
 
         content_extraction = ContentExtraction(self.config['max_new_tokens'], self.config['cache'], self.config['load_in_8bit'], self.logger)
-        extracted_tables_page = [content_extraction.extract_content(table, self.config['use_pipeline_a']) for table in detected_tables]
+        extracted_tables_page = [content_extraction.extract_content(table, self.config['compound_heading']) for table in detected_tables]
 
         tables = [
                         extracted_table
@@ -50,9 +50,8 @@ class TableExtractorPipeline:
                         for extracted_table in extracted_tables_image
                     ]
         
-        pipeline_name = "pipeline_a" if self.config['use_pipeline_a'] else "pipeline_b"
         for i, table in enumerate(tables):
-            content_extraction.save_table(table, Path(self.config['output_path']), Path(self.config['input_path']).stem, pipeline_name, i, self.start_time)
+            content_extraction.save_table(table, Path(self.config['output_path']), Path(self.config['input_path']).stem, i, self.start_time)
 
         self.logger.Log(f'Pipeline completed for {self.config["input_path"]}', logging.INFO)
         self.logger.Log('Total time taken = {:.2f} seconds'.format(time()-self.start_time), logging.INFO)

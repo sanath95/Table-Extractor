@@ -61,18 +61,19 @@ class ContentExtraction:
 
         self.generation_config = dict(max_new_tokens=max_new_tokens)
 
-    def extract_content(self, table, use_pipeline_a):
+    def extract_content(self, table, compound_heading):
         """
         Method to extract content from the image, and generate a pandas dataframe by passing the preprocessed image along with a prompt to the large language model.
         
         - table (PIL): PIL image of the cropped table.
+        - compound_heading (boolean): Content extraction is handled differently if the table contains compound heading
 
         * returns dataframes (List): List of dataframes in the image.
         """
 
         pixel_values = load_image(table).to(bfloat16).cuda()
         
-        if use_pipeline_a:
+        if not compound_heading:
             question_a1 = "<image>\n Structure the text into a table as shown in the image. Don't include a preamble."
             markdown_response = self.llm.chat(self.tokenizer, pixel_values, question_a1, self.generation_config)
         else:
@@ -89,18 +90,17 @@ class ContentExtraction:
         
         return dataframes
 
-    def save_table(self, table, output_folder, img_name, pipeline_name, i, unix_timestamp):
+    def save_table(self, table, output_folder, img_name, i, unix_timestamp):
         """
         Save table in a csv file.
         
         - table (dataframe): Dataframe to be saved
         - output_folder (str): Folder path to store outputs
         - img_name (str): Name of the input image
-        - pipeline_name (str): Name of the pipeline
         - i (int): table number
         - unix_timestamp (int): Make every file name unique using timestamp
         """
-        output_path = Path.joinpath(Path(output_folder), Path(f'{img_name}_{pipeline_name}_table_{i}_{unix_timestamp}.csv'))
+        output_path = Path.joinpath(Path(output_folder), Path(f'{img_name}_table_{i}_{unix_timestamp}.csv'))
 
         header = True
         if len(findall('[-]*', table.iloc[0, 0])) > 0:

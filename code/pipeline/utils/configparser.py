@@ -57,9 +57,9 @@ class ConfigParser:
         if 'load_in_8bit' not in config_keys:
             self.config['load_in_8bit'] = False
 
-        # Use pipeline A. If false, pipeline B will be used.
-        if 'use_pipeline_a' not in config_keys:
-            self.config['use_pipeline_a'] = True
+        # Content extraction is handled differently if the table contains compound heading
+        if 'compound_heading' not in config_keys:
+            self.config['compound_heading'] = False
 
         # File path for the log file
         if 'log_file_path' not in config_keys:

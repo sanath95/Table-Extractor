@@ -86,8 +86,6 @@ class ContentExtraction:
         self.logger.Log(markdown_response, logging.INFO)
 
         dataframes = postprocess_response(markdown_response)
-
-        # [self.logger.Log(f'FString:\n{fstring}', logging.INFO) for fstring in dataframes]
         
         return dataframes
 

@@ -28,33 +28,32 @@ class TableExtractorPipeline:
         
     def extract_tables(self):
         """
-        Method to extract the table data as formatted strings. Table detection, content recognition steps happen here.
+        Method to extract the table data. Table detection, content recognition steps happen here.
 
-        * returns fstrings (List): List of fstrings extracted.
+        * returns tables (List): List of tables.
         """
 
         table_detection = TableDetection(self.config['cache'], self.logger)
-        detected_tables = table_detection.detect_tables(self.config['input_path'], self.config['output_path'], self.config['padding'], self.config['save_temp_files'], int(self.start_time))
+        detected_tables = table_detection.detect_tables(self.config['input_path'], self.config['output_path'], self.config['padding'], self.config['table_detection_threshold'], self.config['save_temp_files'], int(self.start_time))
 
         if not detected_tables:
             self.logger.Log('No tables found!', logging.INFO)
             self.logger.Log(f'Pipeline completed for {self.config["input_path"]}', logging.INFO)
             return []
 
-        llm = ContentExtraction(self.config['max_new_tokens'], self.config['cache'], self.config['load_in_8bit'], self.logger)
-        fstrings_page = [llm.extract_fstring(table, self.config['use_pipeline_a']) for table in detected_tables]
+        content_extraction = ContentExtraction(self.config['max_new_tokens'], self.config['cache'], self.config['load_in_8bit'], self.logger)
+        extracted_tables_page = [content_extraction.extract_content(table, self.config['compound_heading']) for table in detected_tables]
 
-        fstrings = [
-                        fstrings_table
-                        for fstrings_image in fstrings_page
-                        for fstrings_table in fstrings_image
+        tables = [
+                        extracted_table
+                        for extracted_tables_image in extracted_tables_page
+                        for extracted_table in extracted_tables_image
                     ]
-
-        pipeline_name = "pipeline_a" if self.config['use_pipeline_a'] else "pipeline_b"
-        fstrings_output_path = Path.joinpath(Path(self.config['output_path']), Path(f'output_{pipeline_name}_{int(self.start_time)}.json'))
-        llm.save_fstrings(fstrings, fstrings_output_path, Path(self.config['input_path']).stem)
+        
+        for i, table in enumerate(tables):
+            content_extraction.save_table(table, Path(self.config['output_path']), Path(self.config['input_path']).stem, i, self.start_time)
 
         self.logger.Log(f'Pipeline completed for {self.config["input_path"]}', logging.INFO)
         self.logger.Log('Total time taken = {:.2f} seconds'.format(time()-self.start_time), logging.INFO)
 
-        return fstrings
+        return tables

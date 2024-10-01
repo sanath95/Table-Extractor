@@ -2,7 +2,7 @@ import torch
 import torchvision.transforms as T
 from torchvision.transforms.functional import InterpolationMode
 from pandas import read_csv
-from re import findall, sub
+from re import findall
 from io import StringIO
 
 def load_image(image):
@@ -89,11 +89,11 @@ def _find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image
 
 def postprocess_response(markdown_string):
     """
-    Extract the fstrings from the LLM response.
+    Extract the dataframes from the LLM response.
     
     - markdown_string (str): The string response from the LLM.
 
-    * returns tables_image (List): List of tables.
+    * returns tables (List): List of tables as dataframe.
     """
     
     # Split the markdown string into lines
@@ -110,23 +110,16 @@ def postprocess_response(markdown_string):
                 table_lines = []
             table_lines.append(line)
         elif in_table:
-            table, archtype = _parse_tables(table_lines)
-            tables.append((table, archtype))
+            table = _parse_tables(table_lines)
+            tables.append((table))
             in_table = False
 
     # Handle the last table if it wasn't followed by non-table text
     if in_table and table_lines:
-        table, archtype = _parse_tables(table_lines)
-        tables.append((table, archtype))
-
-    fstring_image = []
-    for table in tables:
-        if table[1] == 1:
-            fstring_image.append(_fstring_for_archtype1(table[0]))
-        elif table[1] == 4:
-            fstring_image.append(_fstring_for_archtype4(table[0]))
-    
-    return fstring_image
+        table = _parse_tables(table_lines)
+        tables.append((table))
+        
+    return tables
 
 def _parse_tables(table_lines):
     table_lines_corrected=[]
@@ -139,38 +132,15 @@ def _parse_tables(table_lines):
 
     column_headings_line = [i for i in range(len(table_lines_corrected)) if len(findall('^[| -]*$', table_lines[i])) > 0]
     header = None
-    archtype = 0
     if column_headings_line:
         header=0
         table_string = "\n".join(table_lines_corrected).strip('|')
-        archtype = 1
     else:
         table_string = "\n".join(table_lines_corrected)
-        archtype = 4
 
     table = read_csv(StringIO(table_string), sep="|", engine='python', skipinitialspace=True, header=header)
     table.dropna(axis=1, how='all', inplace=True)
     table.fillna('', inplace=True)
     table.reset_index(drop=True, inplace=True)
-    if archtype == 1: table = table.iloc[1:]
-
-    return table, archtype
-
-def _fstring_for_archtype1(df):
-    fstring_table = ''
-    for i in df.index:
-        for col in df.columns:
-            col_name = sub(r"Unnamed: \d", "", str(col)).strip()
-            fstring_text = f'{col_name} {str(df.loc[i, col]).strip()}'.strip()
-            fstring_table += f'{fstring_text}, '
-
-    return fstring_table.strip(', ')
-
-def _fstring_for_archtype4(df):
-    fstring_table = ''
-    for i in df.index:
-        for col in df.columns:
-            fstring_text = str(df.loc[i, col]).strip()
-            fstring_table += f'{fstring_text}, '
-
-    return fstring_table.strip(', ')
+    
+    return table

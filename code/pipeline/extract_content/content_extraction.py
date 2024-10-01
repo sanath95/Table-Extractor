@@ -1,9 +1,10 @@
-import torch
-import math
+from torch import bfloat16, cuda
+from math import ceil
 from transformers import AutoModel, AutoTokenizer, BitsAndBytesConfig
-import logging
 from pathlib import Path
 from json import load, dump
+import logging
+from re import findall
 
 from pipeline.extract_content.processing_utils import load_image, postprocess_response
 
@@ -35,7 +36,7 @@ class ContentExtraction:
         try:
             self.llm = AutoModel.from_pretrained(
                 model_cache_folder,
-                torch_dtype=torch.bfloat16,
+                torch_dtype=bfloat16,
                 quantization_config=quantization_config,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
@@ -46,7 +47,7 @@ class ContentExtraction:
             self.logger.Log("Downloading LLM files!", logging.INFO)
             self.llm = AutoModel.from_pretrained(
                 model,
-                torch_dtype=torch.bfloat16,
+                torch_dtype=bfloat16,
                 quantization_config=quantization_config,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
@@ -60,18 +61,19 @@ class ContentExtraction:
 
         self.generation_config = dict(max_new_tokens=max_new_tokens)
 
-    def extract_fstring(self, table, use_pipeline_a):
+    def extract_content(self, table, compound_heading):
         """
-        Method to extract content from the image, and generate a formatted string by passing the preprocessed image along with a prompt to the large language model.
+        Method to extract content from the image, and generate a pandas dataframe by passing the preprocessed image along with a prompt to the large language model.
         
         - table (PIL): PIL image of the cropped table.
+        - compound_heading (boolean): Content extraction is handled differently if the table contains compound heading
 
-        * returns tables_image (List): List of tables in the image.
+        * returns dataframes (List): List of dataframes in the image.
         """
 
-        pixel_values = load_image(table).to(torch.bfloat16).cuda()
+        pixel_values = load_image(table).to(bfloat16).cuda()
         
-        if use_pipeline_a:
+        if not compound_heading:
             question_a1 = "<image>\n Structure the text into a table as shown in the image. Don't include a preamble."
             markdown_response = self.llm.chat(self.tokenizer, pixel_values, question_a1, self.generation_config)
         else:
@@ -84,35 +86,30 @@ class ContentExtraction:
 
         self.logger.Log(markdown_response, logging.INFO)
 
-        tables_image = postprocess_response(markdown_response)
-
-        [self.logger.Log(f'FString:\n{fstring}', logging.INFO) for fstring in tables_image]
+        dataframes = postprocess_response(markdown_response)
         
-        return tables_image
+        return dataframes
 
-    def save_fstrings(self, strings, output_path, img_name):
+    def save_table(self, table, output_folder, img_name, i, unix_timestamp):
         """
-        Save fstring in a txt file.
-        Read the output file if exists and add new key, value and write to file again.
-        If output file doesn't exist, create it.
+        Save table in a csv file.
         
-        - strings (List): List of strings to be saved
-        - output_path (str): File path to store outputs
+        - table (dataframe): Dataframe to be saved
+        - output_folder (str): Folder path to store outputs
         - img_name (str): Name of the input image
+        - i (int): table number
+        - unix_timestamp (int): Make every file name unique using timestamp
         """
+        output_path = Path.joinpath(Path(output_folder), Path(f'{img_name}_table_{i}_{unix_timestamp}.csv'))
 
-        if output_path.exists():
-            with open(output_path, mode='r', encoding='utf-8') as f:
-                output_json = load(f)
+        header = True
+        if len(findall('[-]*', table.iloc[0, 0])) > 0:
+            table.drop(0, axis=0, inplace=True)
         else:
-            output_json = {}
+            header = False
+        
+        table.to_csv(output_path, header=header, index=False)
 
-        output_json[img_name] = strings
-
-        with open(output_path, mode='w', encoding='utf-8') as f:
-            dump(output_json, f, ensure_ascii=False)
-
-    
     def _split_model(self):
         """
         Device map when running on multiple GPUs.
@@ -122,12 +119,12 @@ class ContentExtraction:
         """
         
         device_map = {}
-        world_size = torch.cuda.device_count()
+        world_size = cuda.device_count()
         num_layers = 60
         # Since the first GPU will be used for ViT, treat it as half a GPU.
-        num_layers_per_gpu = math.ceil(num_layers / (world_size - 0.5))
+        num_layers_per_gpu = ceil(num_layers / (world_size - 0.5))
         num_layers_per_gpu = [num_layers_per_gpu] * world_size
-        num_layers_per_gpu[0] = math.ceil(num_layers_per_gpu[0] * 0.5)
+        num_layers_per_gpu[0] = ceil(num_layers_per_gpu[0] * 0.5)
         for i, num_layer in enumerate(num_layers_per_gpu):
             for j in range(num_layer):
                 device_map[f'language_model.model.layers.{j}'] = i

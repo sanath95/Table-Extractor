@@ -79,7 +79,7 @@ The configuration file is found at `./code/config.json`
 
 | Parameter | Description | Type | Default | Required |
 | --------- | ----------- | ---- | ------- | -------- |
-| input_path | Input folder path for images | string | - | &#x2713; |
+| input_path | Input path for image | string | - | &#x2713; |
 | output_path | Folder path to store output files | string | ./outputs/ | &#x2718; |
 | table_detection_threshold | Threshold for table detection | float | 0.9 | &#x2718; |
 | padding | Padding to crop detected tables | int | 10 | &#x2718; |

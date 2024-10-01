@@ -19,7 +19,7 @@ class TableDetection:
         - logger (Logger): Logger object
         """
 
-        model = 'microsoft/table-transformer-detection'
+        model = 'microsoft/table-transformer-structure-recognition-v1.1-all'
         self.logger = logger
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -37,6 +37,7 @@ class TableDetection:
 
         self.image_processor = AutoImageProcessor.from_pretrained(model)
         self.image_processor.size['shortest_edge'] = 800
+        self.image_processor.size['longest_edge'] = 800
 
     def detect_tables(self, input_path, output_path, padding, threshold, save_temp_files, unix_timestamp):
         """

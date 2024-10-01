@@ -7,6 +7,6 @@
     "load_in_8bit": false,
     "use_pipeline_a": true,
     "log_file_path": "./.log/table_extractor.logs",
-    "save_temp_files": false,
+    "save_temp_files": true,
     "cache": "./.cache"
 }

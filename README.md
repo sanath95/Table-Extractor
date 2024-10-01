@@ -123,7 +123,7 @@ python ./code/main.py
 ## Observations
 
 - The [**OpenGVLab/InternVL2-8B**](https://huggingface.co/OpenGVLab/InternVL2-8B) is able to efficiently extract textual data from tables while preserving the relationships between the table's cells.
-- It can extract different languages without user input.
+- It can extract German and English languages without user input.
 - It can detect multiple tables in a single image.
 - Pipeline A works well in most simple cases and is faster.
 - Pipeline B does a good job for compound headings. Conversion of tables with compound headers to JSON format allowed Pipeline B to produce accurately formatted strings by merging the headings.

@@ -5,7 +5,8 @@
     "padding": 10,
     "max_new_tokens": 1024,
     "load_in_8bit": false,
-    "use_pipeline_a": false,
+    "use_pipeline_a": true,
+    "log_file_path": "./.log/table_extractor.logs",
     "save_temp_files": false,
     "cache": "./.cache"
 }

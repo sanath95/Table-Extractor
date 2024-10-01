@@ -34,7 +34,7 @@ class TableExtractorPipeline:
         """
 
         table_detection = TableDetection(self.config['cache'], self.logger)
-        detected_tables = table_detection.detect_tables(self.config['input_path'], self.config['output_path'], self.config['padding'], self.config['save_temp_files'], int(self.start_time))
+        detected_tables = table_detection.detect_tables(self.config['input_path'], self.config['output_path'], self.config['padding'], self.config['table_detection_threshold'], self.config['save_temp_files'], int(self.start_time))
 
         if not detected_tables:
             self.logger.Log('No tables found!', logging.INFO)

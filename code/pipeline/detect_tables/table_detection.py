@@ -36,14 +36,16 @@ class TableDetection:
         self.table_detection_model.to(self.device)
 
         self.image_processor = AutoImageProcessor.from_pretrained(model)
+        self.image_processor.size['shortest_edge'] = 800
 
-    def detect_tables(self, input_path, output_path, padding, save_temp_files, unix_timestamp):
+    def detect_tables(self, input_path, output_path, padding, threshold, save_temp_files, unix_timestamp):
         """
         Method to detect tables in the image by calling the transformer model on preprocessed image.
         
         - input_path (str): Input image path
         - output_path (str): Folder path to store all files generated at output
         - padding (int): Padding to crop detected tables
+        - threshold (float): Threshold for table detection
         - save_temp_files (bool): Bool - set true to save temp files (cropped table image, box cordinates)
         - unix_timestamp (int): Make every file name unique using timestamp
         
@@ -58,7 +60,7 @@ class TableDetection:
         outputs = self.table_detection_model(**inputs)
 
         target_sizes = torch.tensor([image.size[::-1]])
-        results = self.image_processor.post_process_object_detection(outputs, threshold=0.9, target_sizes=target_sizes)[0]
+        results = self.image_processor.post_process_object_detection(outputs, threshold=threshold, target_sizes=target_sizes)[0]
 
         if save_temp_files:
             temp_output_folder = Path.joinpath(Path(output_path), Path('temp'))

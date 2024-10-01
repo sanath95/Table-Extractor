@@ -34,11 +34,11 @@ class TableExtractorPipeline:
         """
 
         table_detection = TableDetection(self.config['cache'], self.logger)
-        detected_tables = table_detection.detect_tables(self.config['image_path'], self.config['output_path'], self.config['padding'], self.config['save_temp_files'], int(self.start_time))
+        detected_tables = table_detection.detect_tables(self.config['input_path'], self.config['output_path'], self.config['padding'], self.config['save_temp_files'], int(self.start_time))
 
         if not detected_tables:
             self.logger.Log('No tables found!', logging.INFO)
-            self.logger.Log(f'Pipeline completed for {self.config['image_path']}', logging.INFO)
+            self.logger.Log(f'Pipeline completed for {self.config["input_path"]}', logging.INFO)
             return []
 
         llm = ContentExtraction(self.config['max_new_tokens'], self.config['cache'], self.config['load_in_8bit'], self.logger)
@@ -52,9 +52,9 @@ class TableExtractorPipeline:
 
         pipeline_name = "pipeline_a" if self.config['use_pipeline_a'] else "pipeline_b"
         fstrings_output_path = Path.joinpath(Path(self.config['output_path']), Path(f'output_{pipeline_name}_{int(self.start_time)}.json'))
-        llm.save_fstrings(fstrings, fstrings_output_path, Path(self.config['image_path']).stem)
+        llm.save_fstrings(fstrings, fstrings_output_path, Path(self.config['input_path']).stem)
 
-        self.logger.Log(f'Pipeline completed for {self.config['image_path']}', logging.INFO)
+        self.logger.Log(f'Pipeline completed for {self.config["input_path"]}', logging.INFO)
         self.logger.Log('Total time taken = {:.2f} seconds'.format(time()-self.start_time), logging.INFO)
 
         return fstrings

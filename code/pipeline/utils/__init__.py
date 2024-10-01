@@ -1,2 +1,2 @@
-from utils.configparser import ConfigParser
-from utils.logger import Logger
+from .configparser import ConfigParser
+from .logger import Logger

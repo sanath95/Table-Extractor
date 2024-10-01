@@ -94,18 +94,19 @@ The configuration file is found at `./code/config.json`
 
 ## Execution
 
-1. Install the required libraries
+1. [Create and activate Python virtual environment](https://dev.to/shriekdj/how-to-create-and-activate-the-virtual-environment-for-python3-project-3g4l)
+2. Install the required libraries
 ```
 pip install -r ./code/pipeline4/requirements.txt
 ```
 > **Note**: The execution of the large language model requires a GPU with CUDA installed. The version of pytorch, CUDA and related libraries depends on the hardware. The requirements file provided installs - torch==2.4.0+cu121, and torchvision==0.19.0+cu121. Please install the appropriate libraries from [Pytorch Get Started](https://pytorch.org/get-started/locally/).
-2. Install flash-attention
+3. Install flash-attention
 ```
 pip install flash_attn==2.6.3
 ```
 > **Note**: The OpenGVLab/InternVL2-8B model requires [flash-attention](https://github.com/Dao-AILab/flash-attention) which can take a long time to install.
-3. Update the config file with desired parameters.
-4. Run the main file
+4. Update the config file with desired parameters.
+5. Run the main file
 ```
 python ./code/main.py
 ```

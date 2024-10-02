@@ -119,7 +119,11 @@ python ./code/main.py
 
 ### Example 1
 
+### *Input:*
+
 ![table without border](./test_data/Technical%20manual_PAVEMENT%20MAINTENANCE%20MANAGEMENT-images-57.jpg)
+
+### *Output:*
 
 | Branch Name | Dickman Street |
 | --- | --- |
@@ -158,7 +162,11 @@ python ./code/main.py
 
 ### Example 2
 
+### *Input:*
+
 ![hand written german 1](./test_data/Adobe%20Scan%2002-Oct-2024_page-0001.jpg)
+
+### *Output:*
 
 | Land         | Sprache   | Land         | Sprache   |
 | ------------- | --------- | ------------- | --------- |
@@ -174,7 +182,11 @@ python ./code/main.py
 
 ### Example 3
 
+### *Input:*
+
 ![hand written german 2](./test_data/IMG-20241001-WA0001.jpg)
+
+### *Output:*
 
 | **Person**   | **Was kann man damit machen?** | **Warum ist das den Personen wichtig?** |
 |--------------|------------------------------|----------------------------------------|
@@ -185,11 +197,15 @@ python ./code/main.py
 
 ### Example 4
 
+### *Input:*
+
 ![compound heading](./test_data/hondaactivaconsumerbehaviour-200612061532-images-7.jpg)
 
 ```
 > compound_heading = True
 ```
+
+### *Output:*
 
 | Manufacturers                | 2016-17 Domesic Sales (In Numbers) | 2017-18 Domesic Sales (In Numbers) | Difference (In Numbers) | 2016-17 Market Share (In Percentage) | 2017-18 Market Share (In Percentage) |
 |------------------------------|----------------------------------|----------------------------------|-----------------------|-------------------------------------|-------------------------------------|

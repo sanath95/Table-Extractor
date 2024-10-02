@@ -225,7 +225,8 @@ python ./code/main.py
 The [**OpenGVLab/InternVL2-8B**](https://huggingface.co/OpenGVLab/InternVL2-8B) is able to efficiently extract textual data from tables while preserving the relationships between the table's cells. It can handle different cases like:
 - Tables without borders.
 - Tables with printed and hand written text.
-- Tables with different languages (English and German)
+- Tables with different languages (English and German).
+- Multiple tables in an image.
 - By providing ```compound_heading = True```, we can get good results for tables with compound headings.
 
 ---
